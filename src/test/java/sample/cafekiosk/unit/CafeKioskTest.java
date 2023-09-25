@@ -87,6 +87,23 @@ class CafeKioskTest {
     }
 
     /**
+     * 테스트를 먼저 작성한다.
+     */
+    @Test
+    void calculateTotalPrice() {
+        CafeKiosk cafeKiosk = new CafeKiosk();
+        Americano americano = new Americano();
+        Latte latte = new Latte();
+
+        cafeKiosk.add(americano);
+        cafeKiosk.add(latte);
+
+        int totalPrice = cafeKiosk.calculateTotalPrice();
+
+        assertThat(totalPrice).isEqualTo(8500);
+    }
+
+    /**
      * 가게 운영 시간(10:00~22:00) 외에는 주문을 생성할 수 없다는 요구사항이 발생
      *
      * 항상 성공하는 테스트가 아니다.

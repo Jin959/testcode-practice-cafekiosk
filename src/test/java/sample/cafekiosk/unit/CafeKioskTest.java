@@ -3,6 +3,9 @@ package sample.cafekiosk.unit;
 import org.junit.jupiter.api.Test;
 import sample.cafekiosk.unit.beverages.Americano;
 import sample.cafekiosk.unit.beverages.Latte;
+import sample.cafekiosk.unit.order.Order;
+
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -82,4 +85,54 @@ class CafeKioskTest {
         cafeKiosk.clear();
         assertThat(cafeKiosk.getBeverages()).isEmpty();
     }
+
+    /**
+     * 가게 운영 시간(10:00~22:00) 외에는 주문을 생성할 수 없다는 요구사항이 발생
+     *
+     * 항상 성공하는 테스트가 아니다.
+     * 이 테스트는 우리가 설정한 가게 영업시간에 테스트를 할 때만 성공하는 테스트이다.
+     */
+    @Test
+    void createOrder() {
+        CafeKiosk cafeKiosk = new CafeKiosk();
+        Americano americano = new Americano();
+        cafeKiosk.add(americano);
+
+        Order order = cafeKiosk.createOrder();
+
+        assertThat(order.getBeverages()).hasSize(1);
+        assertThat(order.getBeverages().get(0).getName()).isEqualTo("아메리카노");
+    }
+
+    /**
+     * 가게 운영 시간(10:00~22:00) 외에는 주문을 생성할 수 없다는 요구사항의 경계값 테스트
+     *
+     * 프로덕션 구현내용을 조금 바꿔서 createOrder() 와 다르게 원하는 시간에 성공적인 테스트를 수행할 수 있다.
+     */
+    @Test
+    void createOrderWithOpenTime() {
+        CafeKiosk cafeKiosk = new CafeKiosk();
+        Americano americano = new Americano();
+        cafeKiosk.add(americano);
+
+        // 경계값 10시
+        Order order = cafeKiosk.createOrder(LocalDateTime.of(2023, 9, 25, 10, 0));
+
+        assertThat(order.getBeverages()).hasSize(1);
+        assertThat(order.getBeverages().get(0).getName()).isEqualTo("아메리카노");
+    }
+
+    /**
+     * 가게 운영 시간(10:00~22:00) 외에는 주문을 생성할 수 없다는 요구사항의 예외 테스트
+     */
+    @Test
+    void createOrderWithOutSideOpenTime() {
+        CafeKiosk cafeKiosk = new CafeKiosk();
+        Americano americano = new Americano();
+        cafeKiosk.add(americano);
+
+        assertThatThrownBy(() -> cafeKiosk.createOrder(LocalDateTime.of(2023, 9, 25, 9, 59)))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
 }

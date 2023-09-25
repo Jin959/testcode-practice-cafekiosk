@@ -87,6 +87,8 @@ class CafeKioskTest {
     }
 
     /**
+     * TDD 맛보기
+     *
      * 테스트를 먼저 작성한다.
      */
     @Test

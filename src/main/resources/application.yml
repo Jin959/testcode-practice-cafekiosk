@@ -1,0 +1,52 @@
+spring:
+  profiles:
+    default: local
+
+  datasource:
+    url: jdbc:h2:mem:~/cafeKioskApplication # In-Memory 모드 : localhost:8080/h2-console 로 접근
+#    url: jdbc:h2:tcp://localhost/${H2_URL} # Server 모드, 이미 H2 DB 파일이 존재하는 경우
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true # (스프링 2.5 이상) Hibernate 초기화 이후 data.sql 을 실행하도록
+
+  h2:
+    console:
+      enabled: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+# 테스트에서는 코드 상에서 우리가 넣을 것이기 때문에 SQL initialize를 사용하지 않겠다.
+  sql:
+    init:
+      mode: never

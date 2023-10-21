@@ -17,9 +17,10 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public void createProduct(ProductCreateRequest request) {
+    public ProductResponse createProduct(ProductCreateRequest request) {
         String latestProductNumber = productRepository.findLatestProductNumber();
 
+        return null;
     }
 
     public List<ProductResponse> getSellingProducts() {

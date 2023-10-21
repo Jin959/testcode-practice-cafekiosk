@@ -1,5 +1,6 @@
 package sample.cafekiosk.spring.api.controller.product.dto.request;
 
+import lombok.Builder;
 import sample.cafekiosk.spring.domain.product.ProductSellingStatus;
 import sample.cafekiosk.spring.domain.product.ProductType;
 
@@ -10,4 +11,11 @@ public class ProductCreateRequest {
     private String name;
     private int price;
 
+    @Builder
+    public ProductCreateRequest(ProductType type, ProductSellingStatus sellingStatus, String name, int price) {
+        this.type = type;
+        this.sellingStatus = sellingStatus;
+        this.name = name;
+        this.price = price;
+    }
 }

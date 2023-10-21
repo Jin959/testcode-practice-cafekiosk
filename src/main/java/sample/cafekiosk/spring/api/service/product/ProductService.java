@@ -18,6 +18,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
+    // 중가하는 번호를 부여하는 경우, 동시성 문제
     public ProductResponse createProduct(ProductCreateRequest request) {
         String nextProductNumber = createNextProductNumber();
 
@@ -32,6 +33,9 @@ public class ProductService {
 
     private String createNextProductNumber() {
         String latestProductNumber = productRepository.findLatestProductNumber();
+        if (latestProductNumber == null) {
+            return "001";
+        }
 
         int latestProductNumberInt = Integer.parseInt(latestProductNumber);
         int nextProductNumberInt = latestProductNumberInt + 1;

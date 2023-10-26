@@ -1,5 +1,6 @@
 package sample.cafekiosk.unit;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import sample.cafekiosk.unit.beverages.Americano;
 import sample.cafekiosk.unit.beverages.Latte;
@@ -111,6 +112,7 @@ class CafeKioskTest {
      * 항상 성공하는 테스트가 아니다.
      * 이 테스트는 우리가 설정한 가게 영업시간에 테스트를 할 때만 성공하는 테스트이다.
      */
+    @Disabled
     @Test
     void createOrder() {
         CafeKiosk cafeKiosk = new CafeKiosk();

@@ -4,10 +4,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import sample.cafekiosk.spring.IntegrationTestSupport;
-import sample.cafekiosk.spring.api.controller.order.request.OrderCreateRequest;
+import sample.cafekiosk.spring.api.service.order.request.OrderCreateServiceRequest;
 import sample.cafekiosk.spring.api.service.order.response.OrderResponse;
 import sample.cafekiosk.spring.domain.order.OrderRepository;
 import sample.cafekiosk.spring.domain.orderproduct.OrderProductRepository;
@@ -60,12 +58,12 @@ class OrderServiceTest extends IntegrationTestSupport {
         Product product3 = createProduct(HANDMADE, "003", 5000);
         productRepository.saveAll(List.of(product1, product2, product3));
 
-        OrderCreateRequest request = OrderCreateRequest.builder()
+        OrderCreateServiceRequest request = OrderCreateServiceRequest.builder()
                 .productNumbers(List.of("001", "002"))
                 .build();
 
         // when
-        OrderResponse orderResponse = orderService.createOrder(request.toServiceRequest(), registeredDateTime);
+        OrderResponse orderResponse = orderService.createOrder(request, registeredDateTime);
 
         // then
         assertThat(orderResponse.getId()).isNotNull();  // 얼마인지는 안중요하고 id 값이 들어있는지만 확인하면 된다.
@@ -91,12 +89,12 @@ class OrderServiceTest extends IntegrationTestSupport {
         Product product3 = createProduct(HANDMADE, "003", 5000);
         productRepository.saveAll(List.of(product1, product2, product3));
 
-        OrderCreateRequest request = OrderCreateRequest.builder()
+        OrderCreateServiceRequest request = OrderCreateServiceRequest.builder()
                 .productNumbers(List.of("001", "001"))
                 .build();
 
         // when
-        OrderResponse orderResponse = orderService.createOrder(request.toServiceRequest(), registeredDateTime);
+        OrderResponse orderResponse = orderService.createOrder(request, registeredDateTime);
 
         // then
         assertThat(orderResponse.getId()).isNotNull();  // 얼마인지는 안중요하고 id 값이 들어있는지만 확인하면 된다.
@@ -126,12 +124,12 @@ class OrderServiceTest extends IntegrationTestSupport {
         Stock stock2 = Stock.create("002", 2);
         stockRepository.saveAll(List.of(stock1, stock2));
 
-        OrderCreateRequest request = OrderCreateRequest.builder()
+        OrderCreateServiceRequest request = OrderCreateServiceRequest.builder()
                 .productNumbers(List.of("001", "001", "002", "003"))
                 .build();
 
         // when
-        OrderResponse orderResponse = orderService.createOrder(request.toServiceRequest(), registeredDateTime);
+        OrderResponse orderResponse = orderService.createOrder(request, registeredDateTime);
 
         // then
         assertThat(orderResponse.getId()).isNotNull();
@@ -174,12 +172,12 @@ class OrderServiceTest extends IntegrationTestSupport {
         stock1.deductQuantity(1);   // 이렇게 작성하는 습관은 좋지 않다.
         stockRepository.saveAll(List.of(stock1, stock2));
 
-        OrderCreateRequest request = OrderCreateRequest.builder()
+        OrderCreateServiceRequest request = OrderCreateServiceRequest.builder()
                 .productNumbers(List.of("001", "001", "002", "003"))
                 .build();
 
         // when // then
-        assertThatThrownBy(() -> orderService.createOrder(request.toServiceRequest(), registeredDateTime))
+        assertThatThrownBy(() -> orderService.createOrder(request, registeredDateTime))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("재고가 부족한 상품이 있습니다.");
     }
